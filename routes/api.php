@@ -14,13 +14,12 @@ use Illuminate\Routing\Router;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('user', function (Request $request) {
     return $request->user();
 });
 
-//Route::post('api/wxuser/miniLogin', 'WxuserController@miniLogin');
 $attributes = [
-    'prefix'        => config('api'),
+    //'prefix'        => config('api'),
     'namespace'     => config('App\\Http\\Controllers'),
     //'middleware'    => 'auth:api',
 ];
@@ -31,10 +30,8 @@ Route::group($attributes, function ($router) {
     $router->group(['middleware'    => 'auth:api'], function ($router) {
 
         /* @var \Illuminate\Routing\Router $router */
-        //$router->resource('wxuser', 'WxuserController');
-        $router->get('wxuser/setPhoneNumber', 'WxuserController@setPhoneNumber');
+        $router->any('wxuser/setPhoneNumber', 'WxuserController@setPhoneNumber');
     });
-
     $router->post('wxuser/miniLogin', 'WxuserController@miniLogin');
 
 });
