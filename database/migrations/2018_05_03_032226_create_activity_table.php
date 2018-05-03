@@ -16,9 +16,9 @@ class CreateActivityTable extends Migration
         Schema::create('activity', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('uid');
-            $table->string('province')->comment('省');
-            $table->string('city')->comment('市');
-            $table->string('region')->comment('小区名');
+            $table->string('province',10)->comment('省');
+            $table->string('city',10)->comment('市');
+            $table->string('region',20)->comment('小区名');
             $table->timestamp('stime')->comment('开始时间')->nullable();
             $table->timestamp('etime')->comment('结束时间')->nullable();
             $table->string('goto')->comment('去往');
