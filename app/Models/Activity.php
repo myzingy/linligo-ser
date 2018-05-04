@@ -18,7 +18,7 @@ class Activity extends Model
 
     protected $table = 'activity';
     protected $fillable = ['uid', 'province', 'city','region','stime','etime'
-        ,'goto','distribution','types','commission','status','slogan'];
+        ,'goto','distribution','types','commission','status','slogan','latitude','longitude'];
     protected $casts = [
         'distribution' => 'array',
         'types'=>'array',

@@ -31,6 +31,8 @@ Route::group($attributes, function ($router) {
 
         /* @var \Illuminate\Routing\Router $router */
         $router->any('wxuser/setPhoneNumber', 'WxuserController@setPhoneNumber');
+
+        $router->resource('activity', ActivityController::class);
     });
     $router->post('wxuser/miniLogin', 'WxuserController@miniLogin');
 
