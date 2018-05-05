@@ -18,10 +18,11 @@ class Activity extends Model
 
     protected $table = 'activity';
     protected $fillable = ['uid', 'province', 'city','region','stime','etime'
-        ,'goto','distribution','types','commission','status','slogan','latitude','longitude'];
+        ,'goto','distribution','types','commission','status','slogan','latitude','longitude','address'];
     protected $casts = [
         'distribution' => 'array',
         'types'=>'array',
+        'address'=>'array',
     ];
     public function wxuser(){
         return $this->hasOne(Wxuser::class,'uid','uid');

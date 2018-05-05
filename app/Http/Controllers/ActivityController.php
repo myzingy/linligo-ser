@@ -33,7 +33,10 @@ class ActivityController extends Controller
                 }
             }
         }
-        Activity::create($post);
-        return $post;
+        return Activity::create($post);
+    }
+    public function show($id){
+        $model=Activity::with(['wxuser','orders'])->find($id);
+        return $model;
     }
 }
