@@ -19,7 +19,7 @@ class ActivityOrdersItems extends Model
 
     protected $table = 'activity_orders_items';
 
-    protected $fillable = ['order_id', 'act_id', 'price','status','name','weight'
+    protected $fillable = ['order_id', 'act_id','uid', 'price','status','name','weight'
         ,'weight_unit','actual_weight'];
 
     public function order(){

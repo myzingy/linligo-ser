@@ -35,6 +35,7 @@ class ActivityMyOrderController extends Controller
         if(!empty($post['sub_type']) && $post['sub_type']=='orderSetting') return $actModel;
         ActivityOrdersItems::create([
             'act_id'=>$post['act_id'],
+            'uid'=>Auth::id(),
             'order_id'=>$actModel->id,
             'name'=>$post['name'],
             'weight'=>$post['weight']*10,
@@ -45,8 +46,8 @@ class ActivityMyOrderController extends Controller
         return $this->show($post['act_id']);
     }
     public function destroy($act_id){
-        $itemMod=ActivityOrdersItems::with(['order'])->find($act_id);
-        if($itemMod->order->uid==Auth::id()){
+        $itemMod=ActivityOrdersItems::find($act_id);
+        if($itemMod->uid==Auth::id()){
             $act_id=$itemMod->act_id;
             $itemMod->delete();
             return $this->show($act_id);
