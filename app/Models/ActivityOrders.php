@@ -18,7 +18,7 @@ class ActivityOrders extends Model
 
     protected $table = 'activity_orders';
 
-    protected $fillable = ['uid', 'act_id', 'price','status','info','address'];
+    protected $fillable = ['uid', 'act_id', 'price','status','info','address','commission','distribution'];
     protected $casts = [
         'address' => 'array'
     ];

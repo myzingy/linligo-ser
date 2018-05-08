@@ -33,8 +33,10 @@ Route::group($attributes, function ($router) {
         $router->any('wxuser/setPhoneNumber', 'WxuserController@setPhoneNumber');
 
         $router->resource('activity', ActivityController::class);
+        $router->resource('activity/myOrder', ActivityMyOrderController::class);
+
     });
     $router->post('wxuser/miniLogin', 'WxuserController@miniLogin');
-
+    $router->get('itemName/{name}', 'ItemNameController@show');
 });
 
