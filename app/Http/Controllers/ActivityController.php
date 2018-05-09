@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Models\Wxuser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
 class ActivityController extends Controller
@@ -38,5 +39,22 @@ class ActivityController extends Controller
     public function show($id){
         $model=Activity::with(['wxuser','orders'])->find($id);
         return $model;
+    }
+    public function index(){
+        $type=Input::get('type');
+        if($type){
+            $uid=Auth::id();
+            if($type==1){
+                $list=Activity::where(['uid'=>$uid])->orderBy('id','desc')->limit(20)->get();
+                return $list;
+            }else{
+                $list=Activity::where(['AOI.uid'=>$uid])
+                    ->select('activity.*')
+                    ->join('activity_orders_items as AOI','AOI.act_id','=','activity.id')
+                    ->orderBy('id','desc')->limit(20)->get();
+                return $list;
+            }
+        }
+        throw new \Error('参数异常');
     }
 }
