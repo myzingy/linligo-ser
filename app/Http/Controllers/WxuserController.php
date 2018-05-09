@@ -6,6 +6,7 @@ use App\Models\Wxuser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Tests\Models\User;
 
 class WxuserController extends Controller
 {
@@ -72,5 +73,28 @@ END;
         }
         return false;
 
+    }
+    public function setShareOpenid(){
+        $share_openid=Input::get('share_openid');
+        $wxuser=Wxuser::where(['uid'=>Auth::user()->id])->first();
+        if($share_openid && !$wxuser->share_openid){
+            $wxuser->share_openid=$share_openid;
+            $wxuser->save();
+            if($share_openid!=$wxuser->openid){
+                $shuser=Wxuser::where(['openid'=>$share_openid])->with(['user'])->first();
+                if(!empty($shuser->user)){
+                    $red_packet=rand(10,100);
+                    User::update([
+                        'red_packet'=>$shuser->user->red_packet+$red_packet
+                    ],['id'=>$shuser->user->id]);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    public function show(){
+        $shuser=Wxuser::where(['uid'=>Auth::user()->id])->with(['user'])->first();
+        return $shuser;
     }
 }

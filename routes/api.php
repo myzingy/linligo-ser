@@ -31,6 +31,8 @@ Route::group($attributes, function ($router) {
 
         /* @var \Illuminate\Routing\Router $router */
         $router->any('wxuser/setPhoneNumber', 'WxuserController@setPhoneNumber');
+        $router->any('wxuser/setShareOpenid', 'WxuserController@setShareOpenid');
+        $router->get('wxuser', 'WxuserController@show');
 
         $router->resource('activity', ActivityController::class);
         $router->resource('activity/myOrder', ActivityMyOrderController::class);
