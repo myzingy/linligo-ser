@@ -37,7 +37,10 @@ class ActivityController extends Controller
         return Activity::create($post);
     }
     public function show($id){
-        $model=Activity::with(['wxuser','orders'])->find($id);
+        $model=Activity::with(['wxuser'])->find($id);
+        $model['hasMyItems']=$model->itemsCount([
+            'uid'=>Auth::id()
+        ]);
         return $model;
     }
     public function index(){
@@ -49,9 +52,10 @@ class ActivityController extends Controller
                 return $list;
             }else{
                 $list=Activity::where(['AOI.uid'=>$uid])
-                    ->select('activity.*')
+                    ->select(DB::raw('distinct activity.id,activity.*'))
                     ->join('activity_orders_items as AOI','AOI.act_id','=','activity.id')
-                    ->orderBy('id','desc')->limit(20)->get();
+                    ->orderBy('activity.id','desc')
+                    ->limit(20)->get();
                 return $list;
             }
         }
