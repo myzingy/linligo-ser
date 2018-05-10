@@ -43,4 +43,7 @@ class Activity extends Model
             ->where($where)
             ->count();
     }
+    public function purchases(){
+        return $this->hasMany(ActivityPurchase::class,'act_id','id');
+    }
 }
