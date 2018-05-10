@@ -37,13 +37,13 @@ class ActivityPurchaseController extends Controller
                     'items'=>[]
                 ];
             }
-            if(empty($items[$name][$item->weight_unit])){
-                $items[$name][$item->weight_unit]=0;
-                $items[$name][$item->uid]=[];
+            if(empty($items[$name]['unit'][$item->weight_unit])){
+                $items[$name]['unit'][$item->weight_unit]=0;
+                $items[$name]['user'][$item->uid]=[];
             }
-            $items[$name][$item->weight_unit]+=$item->weight;
+            $items[$name]['unit'][$item->weight_unit]+=$item->weight;
             $items[$name]['ids'][]=$item->id;
-            array_push($items[$name][$item->uid],[
+            array_push($items[$name]['user'][$item->uid],[
                 'uid'=>$item->uid,
                 'nickname'=>$item->nickname,
                 'weight_unit'=>$item->weight_unit,
@@ -59,5 +59,8 @@ class ActivityPurchaseController extends Controller
         return Activity::with(['purchases'=>function($query){
             $query->orderBy('name','asc');
         }])->find($act_id);
+    }
+    public function update(){
+        return Input::all();
     }
 }
