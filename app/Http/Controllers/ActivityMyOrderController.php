@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Models\ActivityOrders;
 use App\Models\ActivityOrdersItems;
 use App\Models\Wxuser;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -23,6 +24,7 @@ class ActivityMyOrderController extends Controller
         $where['distribution']=$post['distribution'];
         $where['address']=empty($post['address'])?"":$post['address'];
         $where['status']=ActivityOrdersItems::STATUS_WCG;
+        $where['nickname']=Auth::user()->name;
         if(!$actModel){
             $actModel=ActivityOrders::create($where);
         }else{
@@ -36,6 +38,7 @@ class ActivityMyOrderController extends Controller
         ActivityOrdersItems::create([
             'act_id'=>$post['act_id'],
             'uid'=>Auth::id(),
+            'nickname'=>Auth::user()->name,
             'order_id'=>$actModel->id,
             'name'=>$post['name'],
             'weight'=>$post['weight']*10,

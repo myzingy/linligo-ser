@@ -41,6 +41,8 @@ class ActivityController extends Controller
         $model['hasMyItems']=$model->itemsCount([
             'uid'=>Auth::id()
         ]);
+        $model['itemsCount']=$model->itemsCount();
+        $model['ordersCount']=$model->ordersCount();
         return $model;
     }
     public function index(){
