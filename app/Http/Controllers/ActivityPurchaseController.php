@@ -34,7 +34,9 @@ class ActivityPurchaseController extends Controller
                     'act_id'=>$act_id,
                     'name'=>$name,
                     'status'=>ActivityOrdersItems::STATUS_WCG,
-                    'items'=>[]
+                    'items'=>[],
+                    'created_at'=>date('Y-m-d H:i:s',time()),
+                    'updated_at'=>date('Y-m-d H:i:s',time()),
                 ];
             }
             if(empty($items[$name]['unit'][$item->weight_unit])){
@@ -61,6 +63,17 @@ class ActivityPurchaseController extends Controller
         }])->find($act_id);
     }
     public function update(){
-        return Input::all();
+        $params=Input::all();
+        $APM=ActivityPurchase::find($params['id']);
+        if($APM->status!=ActivityOrdersItems::STATUS_WCG){
+            throw new \Error('参数错误');
+        }
+        $APM->status=$params['status'];
+        if($params['status']==ActivityOrdersItems::STATUS_CGW){
+            $APM->weight=$params['weight']*10;
+            $APM->price=$params['price']*100;
+        }
+        $APM->save();
+        return $this->show($APM->act_id);
     }
 }
