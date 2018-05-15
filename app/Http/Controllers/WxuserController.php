@@ -18,6 +18,7 @@ class WxuserController extends Controller
 https://api.weixin.qq.com/sns/jscode2session?appid=$appid&secret=$secret&js_code=$js_code&grant_type=authorization_code
 END;
         $obj=json_decode(file_get_contents($url));
+        if(empty($obj->session_key)) throw new \Error($obj->errmsg);
         $data=[];
         $this->decryptData(Input::get('encryptedData'),Input::get('iv'),$obj->session_key,$data);
         if($data){
@@ -30,6 +31,7 @@ END;
                 'session_key'=>$obj->session_key
             ]);
         }
+
         return ['userinfo'=>$data,'access_token'=>$res->user->api_token,'refresh_token'=>$res->user->api_token];
     }
     private function decryptData( $encryptedData, $iv, $sessionKey,&$data )
