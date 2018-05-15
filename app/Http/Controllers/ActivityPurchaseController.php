@@ -41,6 +41,8 @@ class ActivityPurchaseController extends Controller
             }
             if(empty($items[$name]['unit'][$item->weight_unit])){
                 $items[$name]['unit'][$item->weight_unit]=0;
+            }
+            if(empty($items[$name]['user'][$item->uid])){
                 $items[$name]['user'][$item->uid]=[];
             }
             $items[$name]['unit'][$item->weight_unit]+=$item->weight;
