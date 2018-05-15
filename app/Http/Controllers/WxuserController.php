@@ -6,7 +6,6 @@ use App\Models\Wxuser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use Tests\Models\User;
 
 class WxuserController extends Controller
 {
@@ -86,7 +85,7 @@ END;
                 $shuser=Wxuser::where(['openid'=>$share_openid])->with(['user'])->first();
                 if(!empty($shuser->user)){
                     $red_packet=rand(10,100);
-                    User::update([
+                    \App\User::update([
                         'red_packet'=>$shuser->user->red_packet+$red_packet
                     ],['id'=>$shuser->user->id]);
                 }
