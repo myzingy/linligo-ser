@@ -90,9 +90,9 @@ END;
                     ],['id'=>$shuser->user->id]);
                 }
             }
-            return $share_openid;
+            return ['share_openid'=>$share_openid];
         }
-        return $share_openid;
+        return ['share_openid'=>$share_openid];
     }
     public function show(){
         $shuser=Wxuser::where(['uid'=>Auth::user()->id])->with(['user'])->first();
