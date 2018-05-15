@@ -85,9 +85,8 @@ END;
                 $shuser=Wxuser::where(['openid'=>$share_openid])->with(['user'])->first();
                 if(!empty($shuser->user)){
                     $red_packet=rand(10,100);
-                    \App\User::update([
-                        'red_packet'=>$shuser->user->red_packet+$red_packet
-                    ],['id'=>$shuser->user->id]);
+                    $shuser->user->red_packet+=$red_packet;
+                    $shuser->user->save();
                 }
             }
             return ['share_openid'=>$share_openid];
