@@ -36,11 +36,17 @@ class Activity extends Model
     public function ordersCount($where=[]){
         return $this->hasMany(ActivityOrders::class,'act_id','id')
             ->where($where)
+            ->where('status','<>',ActivityOrdersItems::STATUS_YJJ)
             ->count();
     }
     public function itemsCount($where=[]){
+        if($where){
+            return $this->hasMany(ActivityOrdersItems::class,'act_id','id')
+                ->where($where)
+                ->count();
+        }
         return $this->hasMany(ActivityOrdersItems::class,'act_id','id')
-            ->where($where)
+            ->where('status','<>',ActivityOrdersItems::STATUS_YJJ)
             ->count();
     }
     public function purchases(){

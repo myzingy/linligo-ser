@@ -31,10 +31,16 @@ class ActivityMyOrderController extends Controller
             if(ActivityOrdersItems::STATUS_YJJ==$actModel->status
                 || ActivityOrdersItems::STATUS_WCG==$actModel->status){
                 $actModel->update($where);
+                ActivityOrdersItems::where(['order_id'=>$actModel->id])->update([
+                    'status'=>ActivityOrdersItems::STATUS_WCG
+                ]);
             }
         }
 
-        if(!empty($post['sub_type']) && $post['sub_type']=='orderSetting') return $actModel;
+        if(!empty($post['sub_type']) && $post['sub_type']=='orderSetting'){
+            return $this->show($post['act_id']);
+        }
+
         ActivityOrdersItems::create([
             'act_id'=>$post['act_id'],
             'uid'=>Auth::id(),

@@ -23,7 +23,9 @@ class ActivityPurchaseController extends Controller
         $actModel=Activity::where([
             'uid'=>Auth::id(),
             'id'=>$act_id
-        ])->with(['items'])->first();
+        ])->with(['items'=>function($query){
+            $query->where('status','<>',ActivityOrdersItems::STATUS_YJJ);
+        }])->first();
         if(!$actModel) throw new \Error('参数异常');
         $data=[];
         $items=[];
@@ -56,7 +58,16 @@ class ActivityPurchaseController extends Controller
 
             $data[$name]['items']=json_encode($items[$name]);
         }
-        DB::table('activity_purchase')->insert($data);
+        DB::beginTransaction();
+        try{
+            DB::table('activity_purchase')->insert($data);
+            $actModel->status=ActivityOrdersItems::STATUS_WCZ;
+            $actModel->save();
+            DB::commit();
+        }catch (Exception $e){
+            DB::rollBack();
+            throw new \Error('操作失败，请重试');
+        }
         return ['act_id'=>$act_id,'data'=>$data];
     }
     public function show($act_id){
