@@ -27,7 +27,7 @@ Route::group($attributes, function ($router) {
 
     //$router->get('/user', 'HomeController@index');
     /* @var \Illuminate\Routing\Router $router */
-    $router->group(['middleware'    => 'auth:api'], function ($router) {
+    $router->group(['middleware'    => ['auth:api',\App\Http\Middleware\FormIds::class]], function ($router) {
 
         /* @var \Illuminate\Routing\Router $router */
         $router->any('wxuser/setPhoneNumber', 'WxuserController@setPhoneNumber');
