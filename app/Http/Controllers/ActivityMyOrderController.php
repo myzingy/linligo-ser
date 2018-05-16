@@ -21,7 +21,7 @@ class ActivityMyOrderController extends Controller
         ];
         $actModel=ActivityOrders::where($where)->first();
         $where['commission']=$post['commission']*100;
-        $where['distribution']=$post['distribution'];
+        $where['distribution']=$post['distribution']=='到他家取'?'来我家取':$post['distribution'];
         $where['address']=empty($post['address'])?"":$post['address'];
         $where['status']=ActivityOrdersItems::STATUS_WCG;
         $where['nickname']=Auth::user()->name;
