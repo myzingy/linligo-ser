@@ -38,6 +38,7 @@ Route::group($attributes, function ($router) {
         $router->resource('activity/myOrder', ActivityMyOrderController::class);
         $router->resource('activityPurchase', ActivityPurchaseController::class);
         $router->resource('activityOrders', ActivityOrdersController::class);
+        $router->resource('activityItems', ActivityItemsController::class);
 
     });
     $router->post('wxuser/miniLogin', 'WxuserController@miniLogin');

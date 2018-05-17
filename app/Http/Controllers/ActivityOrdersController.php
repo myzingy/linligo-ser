@@ -29,7 +29,8 @@ class ActivityOrdersController extends Controller
                 $model->status=Input::get('status');
                 $model->info=Input::get('info','');
                 $model->save();
-                ActivityOrdersItems::where(['order_id'=>$order_id])->update(['status'=>Input::get('status')]);
+                ActivityOrdersItems::where(['order_id'=>$order_id,'status'=>ActivityOrdersItems::STATUS_CGW])
+                    ->update(['status'=>Input::get('status')]);
                 DB::commit();
             }catch (\Exception $e){
                 DB::rollBack();
