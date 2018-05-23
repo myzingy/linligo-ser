@@ -72,7 +72,7 @@ END;
             $wxuser->save();
             return $data;
         }
-        return false;
+        return [Input::All(),$wxuser->session_key,$data];
 
     }
     public function setShareOpenid(){
