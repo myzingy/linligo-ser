@@ -30,7 +30,8 @@ class ActivityOrdersController extends Controller
                 $model->status=Input::get('status');
                 $model->info=Input::get('info','');
                 $model->save();
-                ActivityOrdersItems::where(['order_id'=>$order_id,'status'=>ActivityOrdersItems::STATUS_CGW])
+                ActivityOrdersItems::where(['order_id'=>$order_id])
+                    ->where('status','<>',ActivityOrdersItems::STATUS_CGW)
                     ->update(['status'=>Input::get('status')]);
                 DB::commit();
                 if(Input::get('status')==ActivityOrdersItems::STATUS_YJJ){//拒绝通知
