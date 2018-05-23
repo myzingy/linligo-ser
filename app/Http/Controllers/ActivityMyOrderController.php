@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\Wxlite;
 use App\Models\Activity;
 use App\Models\ActivityOrders;
 use App\Models\ActivityOrdersItems;
@@ -9,6 +10,7 @@ use App\Models\Wxuser;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Input;
 
 class ActivityMyOrderController extends Controller
@@ -25,8 +27,10 @@ class ActivityMyOrderController extends Controller
         $where['address']=empty($post['address'])?"":$post['address'];
         $where['status']=ActivityOrdersItems::STATUS_WCG;
         $where['nickname']=Auth::user()->name;
+        $newOrderFlag=false;
         if(!$actModel){
             $actModel=ActivityOrders::create($where);
+            $newOrderFlag=true;
         }else{
             if(ActivityOrdersItems::STATUS_YJJ==$actModel->status
                 || ActivityOrdersItems::STATUS_WCG==$actModel->status){
@@ -52,7 +56,35 @@ class ActivityMyOrderController extends Controller
             'act_id'=>$post['act_id'],
             'status'=>ActivityOrdersItems::STATUS_WCG,
         ]);
+
+        $noticeFlag=$this->_isCanNotice($actModel->id);
+        if($noticeFlag){
+            $wxlib=new Wxlite();
+            $am=Activity::with('wxuser')->find($post['act_id']);
+            $noticeData=[
+                'keyword1'=>[
+                    'value'=>$where['nickname'].'参加了'.$am->slogan,
+                ],
+                'keyword2'=>['value'=>$post['name']." ".$post['weight'].$post['weight_unit'].'...'],
+                'keyword3'=>['value'=>$where['nickname']],
+                'keyword4'=>['value'=>''],
+                'keyword5'=>['value'=>$where['distribution']],
+                'keyword6'=>['value'=>''],
+            ];
+            $page=str_replace('{id}',$post['act_id'],Wxlite::TPL_ACTIVITY_JOIN_PAGE);
+            $wxlib->notice($am->wxuser->openid,Wxlite::TPL_ACTIVITY_JOIN
+                ,$page,$noticeData);
+        }
         return $this->show($post['act_id']);
+    }
+    private function _isCanNotice($id){
+        $key='ActivityOrders-'.$id;
+        $val=Cache::get($key);
+        if($val){
+            return false;
+        }
+        Cache::put($key, time(),15);
+        return true;
     }
     public function destroy($act_id){
         $itemMod=ActivityOrdersItems::find($act_id);

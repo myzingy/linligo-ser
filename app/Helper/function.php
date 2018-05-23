@@ -5,11 +5,19 @@
  * Date: 2018/5/4
  * Time: 22:39
  */
-function http($url){
+function http($url,$post=""){
+    if($post && is_array($post)){
+        $query = http_build_query($post);
+    }else{
+        $query=$post;
+    }
     $opts = array(
         'http'=>array(
-            'method'=>"GET",
-            'timeout'=>10,
+            'method'=>$query?"POST":"GET",
+            'timeout'=>30,
+            //'header' => 'Content-type:application/x-www-form-urlencoded',
+            'header' => 'Content-type:application/json',
+            'content' => $query
         )
     );
     $context = stream_context_create($opts);
