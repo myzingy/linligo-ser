@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\Wxlite;
 use App\Models\Activity;
 use App\Models\ActivityOrders;
 use App\Models\ActivityOrdersItems;
@@ -32,6 +33,19 @@ class ActivityOrdersController extends Controller
                 ActivityOrdersItems::where(['order_id'=>$order_id,'status'=>ActivityOrdersItems::STATUS_CGW])
                     ->update(['status'=>Input::get('status')]);
                 DB::commit();
+                if(Input::get('status')==ActivityOrdersItems::STATUS_YJJ){//拒绝通知
+                    $wxlib=new Wxlite();
+                    $am=Activity::with('wxuser')->find($model->act_id);
+                    $noticeData=[
+                        'keyword1'=>[
+                            'value'=>'你参加的 '.$am->slogan.' 被拒绝了',
+                        ],
+                        'keyword2'=>['value'=>$model->info."\n如需继续参加，请进入详情修改"],
+                    ];
+                    $page=str_replace('{id}',$model->act_id,Wxlite::TPL_ACTIVITY_REFUSE_PAGE);
+                    $wxlib->notice($model->wxuser->openid,Wxlite::TPL_ACTIVITY_REFUSE
+                        ,$page,$noticeData);
+                }
             }catch (\Exception $e){
                 DB::rollBack();
                 throw new \Error('操作失败，请重试');
