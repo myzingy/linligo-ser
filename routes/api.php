@@ -44,5 +44,6 @@ Route::group($attributes, function ($router) {
     });
     $router->post('wxuser/miniLogin', 'WxuserController@miniLogin');
     $router->get('itemName/{name}', 'ItemNameController@show');
+    $router->get('footData', 'OneController@footData');
 });
 
