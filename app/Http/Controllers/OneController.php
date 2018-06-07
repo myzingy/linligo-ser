@@ -26,7 +26,7 @@ class OneController extends Controller
 
         }
         $sgname=array_keys($sgdata);
-        $sg001=['苹果','梨','桃','西瓜','香蕉','橘子','橙子',];
+        $sg001=['苹果','梨','桃','西瓜','香蕉','桔子','橙子',];
         $sg999=['白杏','崩瓜','番荔枝/释迦果','长枣','沙果','李广杏','毛葡萄','姑娘果'];
         $data=[
             'tabs'=>[
@@ -36,7 +36,7 @@ class OneController extends Controller
             ],
             'list'=>[
                 $sg001,
-                array_diff($sgname,$sg999,$sg001),
+                array_values(array_diff($sgname,$sg999,$sg001)),
                 $sg999
             ],
             'ror'=>$sgdata,
