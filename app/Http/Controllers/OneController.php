@@ -7,7 +7,7 @@ class OneController extends Controller
 {
     public function footData(){
         $xc=file_get_contents('./xc.txt');
-        preg_match_all("/(.*)---(.*)[\r\n]/",$xc,$match);
+        preg_match_all("/(.*)---(.*)[\r\n]*/",$xc,$match);
         $tabs=[];
         $list=[];
         $ror=[];
