@@ -6,6 +6,39 @@ namespace App\Http\Controllers;
 class OneController extends Controller
 {
     public function footData(){
+        $xc=file_get_contents('./xc.txt');
+        preg_match_all("/(.*)---(.*)[\r\n]/",$xc,$match);
+        $tabs=[];
+        $list=[];
+        $ror=[];
+        foreach ($match[2] as $i=>$rows_str){
+            $local=trim($match[1][$i]);
+            array_push($tabs,[
+                'name'=>$local,'checkNum'=>0
+            ]);
+            $rows=explode('、',$rows_str);
+
+            foreach ($rows as $ri=>$name){
+                $name=trim($name);
+                if(empty($ror[$name][$local])){
+                    $ror[$name][$local]=10;
+                }else{
+                    $ror[$name][$local]+=10;
+                }
+                $rows[$ri]=[
+                    'name'=>$name,'checked'=>false
+                ];
+            }
+            array_push($list,$rows);
+        }
+        $data=[
+            'tabs'=>$match[1],
+            'list'=>$list,
+            'ror'=>$ror,
+        ];
+        return $data;
+    }
+    public function footDataSG(){
         $sg=file_get_contents('./sg.txt');
         preg_match_all("/(.*)\t(.*)[\r\n]/",$sg,$match);
         $sgdata=[];
