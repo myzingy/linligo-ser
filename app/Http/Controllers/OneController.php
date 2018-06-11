@@ -32,7 +32,7 @@ class OneController extends Controller
             array_push($list,$rows);
         }
         $data=[
-            'tabs'=>$match[1],
+            'tabs'=>$tabs,
             'list'=>$list,
             'ror'=>$ror,
         ];
