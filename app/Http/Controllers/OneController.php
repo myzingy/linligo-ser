@@ -82,4 +82,33 @@ class OneController extends Controller
         return $data;
         //die(json_encode($data,JSON_UNESCAPED_UNICODE));
     }
+    function category(){
+        $data=[
+            'tabs'=>[
+                ['name'=>'瓜果梨桃','checkNum'=>0],
+                ['name'=>'新鲜水果','checkNum'=>0],
+                ['name'=>'调味蔬菜','checkNum'=>0],
+                ['name'=>'叶菜蔬菜','checkNum'=>0],
+                ['name'=>'蘑菇菌类','checkNum'=>0],
+                ['name'=>'新鲜蔬菜','checkNum'=>0],
+                ['name'=>'大肉家禽','checkNum'=>0],
+                //['name'=>'鲜活水产','checkNum'=>0],
+            ],
+            'list'=>[
+                explode('、','西瓜、甜瓜、梨瓜、哈密瓜、红富士、青苹果、梨、毛桃、油桃、蟠桃'),
+                explode('、','香蕉、桔子、芦柑、蜜桔、冰糖橘、圣女果、柚子、蜜柚、红心柚'),
+                explode('、','香菜、蒜、姜、小葱、大葱、蒜苗、韭菜、茴香、青辣椒、小米椒、红辣椒、菜辣椒'),
+                explode('、','小香芹、芹菜、白菜、包菜、空心菜、小白菜、青菜、油菜、油麦菜、菠菜、叶生菜、苦菊、西兰花、苦苣菜、茼蒿、紫甘蓝'),
+                explode('、','香菇、金针菇、平菇、杏鲍菇、黑木耳、小木耳、蟹味菇、白玉菇、花菇'),
+                explode('、','土豆、红薯、西红柿、黄瓜、鲜南瓜、老南瓜、胡萝卜、白萝卜、'),
+                explode('、','牛肉、红薯、西红柿、黄瓜、鲜南瓜、老南瓜、胡萝卜、白萝卜'),
+            ],
+        ];
+        foreach ($data['list'] as &$items){
+            foreach ($items as &$item){
+                $item=['name'=>$item,'checked'=>false];
+            }
+        }
+        return $data;
+    }
 }
