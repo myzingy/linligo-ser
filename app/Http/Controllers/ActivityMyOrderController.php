@@ -11,6 +11,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
 class ActivityMyOrderController extends Controller
@@ -88,6 +89,9 @@ class ActivityMyOrderController extends Controller
     }
     public function destroy($act_id){
         $itemMod=ActivityOrdersItems::find($act_id);
+        if($itemMod->status!=ActivityOrdersItems::STATUS_WCG){
+            throw new \Error('活动当前状态不允许操作，请返回');
+        }
         if($itemMod->uid==Auth::id()){
             $act_id=$itemMod->act_id;
             $itemMod->delete();
@@ -106,5 +110,46 @@ class ActivityMyOrderController extends Controller
             $order->items=$order->items()->orderBy('id','desc')->get();
         }
         return $model;
+    }
+    public function batchSet(){
+        $uid=Auth::id();
+        $nickname=Auth::user()->name;
+        $where=[
+            'id'=>Input::get('act_id'),
+        ];
+        $actModel=Activity::where($where)->first();
+        if($actModel->status!=ActivityOrdersItems::STATUS_WCG){
+            throw new \Error('活动当前状态不允许操作，请返回');
+        }
+        $base_query=[
+            'uid'=>Auth::id(),
+            'act_id'=>Input::get('act_id'),
+            'order_id'=>Input::get('order_id'),
+        ];
+        DB::beginTransaction();
+        try{
+            ActivityOrdersItems::where($base_query)->delete();
+            $ctime=date('Y-m-d H:i:s',time());
+            $items=Input::get('items');
+            $data=[];
+            if($items){
+                foreach ($items as $item){
+                    array_push($data,array_merge($base_query,[
+                        'nickname'=>$nickname,
+                        'name'=>$item['name'],
+                        'weight'=>$item['weight']*10,
+                        'weight_unit'=>$item['weight_unit'],
+                        'status'=>ActivityOrdersItems::STATUS_WCG,
+                        'created_at'=>$ctime,
+                        'updated_at'=>$ctime,
+                    ]));
+                }
+                DB::table('activity_orders_items')->insert($data);
+            }
+            DB::commit();
+        }catch (\Exception $e){
+            throw new \Error($e->getMessage());
+            DB::rollBack();
+        }
     }
 }

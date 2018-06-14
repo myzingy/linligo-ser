@@ -66,13 +66,13 @@ END;
     public function setPhoneNumber(){
         $wxuser=Wxuser::where(['uid'=>Auth::user()->id])->first();
         $data=[];
-        $this->decryptData(Input::get('encryptedData'),Input::get('iv'),$wxuser->session_key,$data);
+        $res_number=$this->decryptData(Input::get('encryptedData'),Input::get('iv'),$wxuser->session_key,$data);
         if(!empty($data['phoneNumber'])){
             $wxuser->phone=$data['phoneNumber'];
             $wxuser->save();
             return $data;
         }
-        return [Input::All(),$wxuser->session_key,$data];
+        return [Input::All(),$res_number,$wxuser->session_key,$data];
 
     }
     public function setShareOpenid(){

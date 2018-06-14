@@ -34,6 +34,7 @@ Route::group($attributes, function ($router) {
         $router->any('wxuser/setShareOpenid', 'WxuserController@setShareOpenid');
         $router->get('wxuser', 'WxuserController@show');
         $router->post('wxgroup', 'WxgroupController@bind');
+        $router->post('activity/myOrderBatchSet', 'ActivityMyOrderController@batchSet');
 
         $router->resource('activity', ActivityController::class);
         $router->resource('activity/myOrder', ActivityMyOrderController::class);
