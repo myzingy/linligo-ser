@@ -34,6 +34,7 @@ class ActivityController extends Controller
                 }
             }
         }
+        $post['commission']+=0;
         return Activity::create($post);
     }
     public function show($id){
